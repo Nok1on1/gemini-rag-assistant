@@ -1,3 +1,7 @@
+# Disclaimer
+
+**Mainly made because Node.js currently doesn't have enough support for Gemini with LangChain for RAG. (Need this for other Project)**
+
 # GeminiRAG
 
 A Retrieval-Augmented Generation (RAG) assistant using Google Gemini, FastAPI, and MongoDB Atlas.
