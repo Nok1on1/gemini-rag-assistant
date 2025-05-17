@@ -59,13 +59,14 @@ class ragData(BaseModel):
 
 
 def LoadData(rag_data_list: List[ragData]):
-    for rag_data in rag_data_list:
+    documents = [
+        Document(page_content=rag_data.text, metadata={"source": rag_data.source})
+        for rag_data in rag_data_list
+    ]
 
-        doc = Document(page_content=rag_data.text, metadata={"source": rag_data.source})
-
-        MongoDBAtlasVectorSearch.from_documents(
-            [doc], embeddings, collection=rag_collection
-        )
+    MongoDBAtlasVectorSearch.from_documents(
+        documents, embeddings, collection=rag_collection
+    )
 
     return "Data loaded successfully"
 
