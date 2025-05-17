@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from controllers.geminiController import (
     LoadData,
     ragData,
@@ -6,14 +6,17 @@ from controllers.geminiController import (
     UserInput,
     get_history,
 )
+from utils.databaseUtils import is_admin_dependency
 from typing import List
 
 router = APIRouter()
 
 
 @router.post("/loadRagData")
-async def load_data_endpoint(rag_data_list: List[ragData]):
-    return LoadData(rag_data_list)
+async def load_data_endpoint(
+    ragData: List[ragData], user_id=Depends(is_admin_dependency)
+):
+    return LoadData(ragData)
 
 
 @router.put("/extractRagData")
