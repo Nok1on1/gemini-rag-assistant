@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Query
 from controllers.geminiController import (
     LoadData,
     ragData,
@@ -17,11 +17,11 @@ async def load_data_endpoint(rag_data_list: List[ragData]):
 
 
 @router.put("/extractRagData")
-async def extract_information_endpoint(rag_data_list: UserInput, request: Request):
-    result = await query_data(rag_data_list, request)
-    return {"Retrieved Data": result[1], "Answer": result[0]} # type: ignore
+async def extract_information_endpoint(rag_data_list: UserInput):
+    result = query_data(rag_data_list)
+    return {"retrieved_data": result[1], "answer": result[0]}  # type: ignore
 
 
 @router.get("/getHistory")
-async def get_history_endpoint(request: Request):
-    return await get_history(request)
+async def get_history_endpoint(user_id: str = Query(...)):
+    return await get_history(user_id)

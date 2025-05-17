@@ -1,4 +1,3 @@
-from fastapi import Request
 from pymongo import AsyncMongoClient, MongoClient
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
@@ -72,19 +71,20 @@ def LoadData(rag_data_list: List[ragData]):
 
 
 class UserInput(BaseModel):
-    text: str
+    content: str
+    user_id: str
 
 
-async def query_data(Input: UserInput, request: Request):
+async def query_data(Input: UserInput):
 
     answer = ""
 
-    user_id = getattr(request.state, "user_id", None)
+    user_id = Input.user_id
     if user_id is None:
         return {"error": "User Not Logged In"}
 
     user_id = ObjectId(user_id)
-    query = Input.text
+    query = Input.content
 
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.0-flash",
@@ -157,7 +157,7 @@ async def query_data(Input: UserInput, request: Request):
             "$push": {
                 "history": {
                     "$each": [
-                        {"role": "user", "parts": [{"text": Input.text}]},
+                        {"role": "user", "parts": [{"text": Input.content}]},
                         {"role": "model", "parts": [{"text": answer}]},
                     ]
                 }
@@ -169,19 +169,25 @@ async def query_data(Input: UserInput, request: Request):
     return answer, context
 
 
-async def get_history(request: Request):
-    user_id = getattr(request.state, "user_id", None)
+class UserId(BaseModel):
+    user_id: str
 
+
+async def get_history(user_id: str):
     if user_id is None:
         return {"error": "User Not Logged In"}
-    try:
 
-        user_id = ObjectId(user_id)
-        # Find the history document for this user only
+    try:
+        user_id = ObjectId(user_id)  # type: ignore
+
         found = await history_collection.find_one({"user_id": user_id})
+
         if not found:
             return {"error": "No history found"}
-        history = found.get("history")
+
+        history = found.get("history")[-30:]
+
         return convert_objectid(history)
+
     except Exception as e:
         return {"error": str(e)}
