@@ -27,7 +27,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
                 # Save token to set in response later
                 request.state.new_access_token = new_access_token
-
+            print(f"User ID: {user_id}")
             request.state.user_id = user_id
 
         except jwt.ExpiredSignatureError:
