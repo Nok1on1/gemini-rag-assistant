@@ -3,7 +3,7 @@ from pymongo import AsyncMongoClient, MongoClient
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain.vectorstores import MongoDBAtlasVectorSearch
+from langchain_community.vectorstores import MongoDBAtlasVectorSearch
 from langchain_core.documents import Document
 from langchain.chains import retrieval
 from dotenv import load_dotenv
