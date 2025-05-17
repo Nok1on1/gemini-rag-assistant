@@ -21,7 +21,7 @@ async def load_data_endpoint(
 
 @router.put("/extractRagData")
 async def extract_information_endpoint(rag_data_list: UserInput):
-    result = query_data(rag_data_list)
+    result = await query_data(rag_data_list)
     return {"retrieved_data": result[1], "answer": result[0]}  # type: ignore
 
 
