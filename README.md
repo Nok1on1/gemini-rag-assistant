@@ -39,7 +39,6 @@ utils/                   # Utility functions (history conversion, etc.)
      ```env
      MONGO_CONNECTION_STRING=your_mongodb_connection_string
      GEMINI_API_KEY=your_gemini_api_key
-     JWT_SECRET_KEY=your_jwt_secret
      ENV=development
      ```
 
